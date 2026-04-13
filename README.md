@@ -28,8 +28,3 @@ To wire Supabase auth + database, provide:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - Preferred auth providers (email/password, Google, GitHub, etc.)
-
-
-## Install troubleshooting
-
-If you hit `npm install` 403 errors in restricted networks, see `docs/npm-install-troubleshooting.md` and `.npmrc.example`.
