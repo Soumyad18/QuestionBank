@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import { QuestionsPage } from "./pages/QuestionsPage";
 import { AdminQuestionsPage } from "./pages/AdminQuestionsPage";
+import { AdminManagePage } from "./pages/AdminManagePage";
 import { LoginPage } from "./pages/LoginPage";
 import { SignupPage } from "./pages/SignupPage";
 import { AuthProvider, useAuth } from "./lib/auth";
@@ -32,6 +33,14 @@ export function App() {
             element={
               <AdminRoute>
                 <AdminQuestionsPage />
+              </AdminRoute>
+            } 
+          />
+          <Route 
+            path="/admin/manage" 
+            element={
+              <AdminRoute>
+                <AdminManagePage />
               </AdminRoute>
             } 
           />

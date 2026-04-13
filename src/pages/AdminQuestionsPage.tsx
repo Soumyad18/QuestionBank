@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../lib/auth";
 
 export function AdminQuestionsPage() {
@@ -32,9 +33,14 @@ export function AdminQuestionsPage() {
           <span className="badge">ADMIN_NODE</span>
           <span className="muted" style={{ marginLeft: "8px" }}>[{user?.email}]</span>
         </div>
-        <button onClick={logout} className="muted" style={{ background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>
-          [TERM_SESSION]
-        </button>
+        <div className="row">
+          <Link to="/admin/manage" className="btn" style={{ padding: "6px 12px", fontSize: "11px" }}>
+            [MANAGE]
+          </Link>
+          <button onClick={logout} className="muted" style={{ background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>
+            [TERM_SESSION]
+          </button>
+        </div>
       </header>
       
       {/* Main Body */}
