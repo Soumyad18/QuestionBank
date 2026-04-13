@@ -1,6 +1,6 @@
 import { CATEGORIES, DIFFICULTY } from "@/lib/categories";
 
-export default function AdminQuestionsPage() {
+export function AdminQuestionsPage() {
   return (
     <section className="stack">
       <h1>Admin · Manage Questions</h1>

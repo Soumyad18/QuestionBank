@@ -1,6 +1,6 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
-export default function HomePage() {
+export function HomePage() {
   return (
     <section className="stack">
       <h1>Interview Question Bank</h1>
@@ -9,9 +9,9 @@ export default function HomePage() {
         questions.
       </p>
       <div className="row">
-        <Link href="/questions">Browse Questions</Link>
+        <Link to="/questions">Browse Questions</Link>
         <span>•</span>
-        <Link href="/admin/questions">Admin Panel</Link>
+        <Link to="/admin/questions">Admin Panel</Link>
       </div>
     </section>
   );

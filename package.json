@@ -3,23 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "next": "15.3.1",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "react-router-dom": "^7.14.0"
   },
   "devDependencies": {
     "@types/node": "22.15.29",
     "@types/react": "19.1.5",
     "@types/react-dom": "19.1.5",
+    "@vitejs/plugin-react": "^6.0.1",
     "eslint": "9.26.0",
-    "eslint-config-next": "15.3.1",
-    "typescript": "5.8.3"
+    "typescript": "5.8.3",
+    "vite": "^8.0.8"
   }
 }

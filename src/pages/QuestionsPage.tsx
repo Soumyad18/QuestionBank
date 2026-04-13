@@ -2,7 +2,7 @@ import { QuestionCard } from "@/components/question-card";
 import { CATEGORIES, DIFFICULTY } from "@/lib/categories";
 import { MOCK_QUESTIONS } from "@/lib/mock-data";
 
-export default function QuestionsPage() {
+export function QuestionsPage() {
   return (
     <section className="stack">
       <h1>Question Discovery</h1>
