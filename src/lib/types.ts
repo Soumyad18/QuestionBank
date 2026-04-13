@@ -1,4 +1,4 @@
-import type { Category, Difficulty } from "@/lib/categories";
+import type { Category, Difficulty, Round } from "@/lib/categories";
 
 export type UserRole = "admin" | "user";
 
@@ -6,7 +6,7 @@ export interface Question {
   id: string;
   text: string;
   company: string;
-  round: "screening" | "l1" | "l2" | "hr";
+  round: Round;
   date: string;
   interviewerName?: string;
   category: Category;

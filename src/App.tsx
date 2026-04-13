@@ -1,18 +1,42 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import { QuestionsPage } from "./pages/QuestionsPage";
 import { AdminQuestionsPage } from "./pages/AdminQuestionsPage";
+import { LoginPage } from "./pages/LoginPage";
+import { SignupPage } from "./pages/SignupPage";
+import { AuthProvider, useAuth } from "./lib/auth";
+
+// A simple wrapper to protect admin routes
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+  
+  if (!user || user.role !== 'admin') {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return <>{children}</>;
+}
 
 export function App() {
   return (
-    <BrowserRouter>
-      <main className="container">
+    <AuthProvider>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
           <Route path="/questions" element={<QuestionsPage />} />
-          <Route path="/admin/questions" element={<AdminQuestionsPage />} />
+          
+          <Route 
+            path="/admin/questions" 
+            element={
+              <AdminRoute>
+                <AdminQuestionsPage />
+              </AdminRoute>
+            } 
+          />
         </Routes>
-      </main>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
