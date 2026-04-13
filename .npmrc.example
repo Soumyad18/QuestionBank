@@ -1,0 +1,11 @@
+# Copy this file to .npmrc and customize based on your environment.
+
+# Public npm registry (use only if allowed by your network policy)
+registry=https://registry.npmjs.org/
+
+# Internal registry example (uncomment and edit)
+# registry=https://<your-internal-registry>/
+# //<your-internal-registry>/:_authToken=${NPM_TOKEN}
+
+# If required by company CA
+# cafile=/path/to/your-org-ca.crt
