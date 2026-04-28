@@ -1,4 +1,27 @@
-node_modules
-.next
-.env.local
-.env*.local
+# === Frontend ===
+frontend/node_modules/
+frontend/.next/
+frontend/.vite/
+frontend/.env.local
+
+# === Backend ===
+backend/target/
+backend/.env
+backend/*.iml
+backend/.idea/
+backend/.settings/
+backend/.classpath
+backend/.project
+backend/.factorypath
+
+# === Shared ===
+.DS_Store
+*.log
+.idea/
+.vscode/
+
+# === Postman ===
+*.postman_collection.json
+
+# === Docs with secrets ===
+supabase-mcp-server.md
