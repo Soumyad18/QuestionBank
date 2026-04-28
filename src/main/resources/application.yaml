@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: question_bank
+
+  mongodb:
+    uri: mongodb://localhost:27017/mydatabase
