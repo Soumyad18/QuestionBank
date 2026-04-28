@@ -104,6 +104,14 @@ a:hover {
   border-color: var(--accent-cyan);
 }
 
+.card:has(.card-btn-edit:hover) {
+  border-color: #4ade80;
+}
+
+.card:has(.card-btn-del:hover) {
+  border-color: #f87171;
+}
+
 .stack {
   display: grid;
   gap: var(--spacing-md);
@@ -172,6 +180,28 @@ a:hover {
   background: var(--accent-cyan);
   color: var(--bg-color);
   border-color: var(--accent-cyan);
+}
+
+.btn-danger {
+  color: #f87171;
+  border-color: #f87171;
+}
+
+.btn-danger:hover {
+  color: #f87171;
+  border-color: #f87171;
+  background: transparent;
+}
+
+.btn-success {
+  color: #4ade80;
+  border-color: #4ade80;
+}
+
+.btn-success:hover {
+  color: #4ade80;
+  border-color: #4ade80;
+  background: transparent;
 }
 
 /* Form Inputs */

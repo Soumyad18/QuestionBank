@@ -19,8 +19,7 @@ export const CATEGORIES = [
 
 export type Category = (typeof CATEGORIES)[number];
 
-export const DIFFICULTY = ["easy", "medium", "hard"] as const;
-export type Difficulty = (typeof DIFFICULTY)[number];
+// Difficulty removed — replaced by Relevancy Score Engine (see RelevancyScore.md)
 
 export const ROUNDS = [
   "screening", "l1", "l2", "l3", "l4", "l5", "l6",
@@ -55,10 +54,4 @@ export const ROUND_COLORS: Record<Round, string> = {
   l12: "#60A5FA", // blue
   hr:  "#94A3B8", // slate
   f2f: "#F472B6", // pink
-};
-
-export const DIFFICULTY_COLORS: Record<Difficulty, string> = {
-  easy:   "#4ADE80", // green
-  medium: "#FACC15", // yellow
-  hard:   "#F87171", // red
 };
