@@ -3,21 +3,26 @@ package com.qb.core.service;
 import com.qb.core.dto.QuestionDTO;
 import com.qb.core.entity.EmailLog;
 import com.qb.core.repository.EmailLogRepository;
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.util.ByteArrayDataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 
 import java.time.Instant;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 /**
- * Sends transactional emails via Brevo REST API with PDF attachment.
+ * Sends transactional emails via Gmail SMTP with PDF attachment.
  * Logs every send to email_logs table.
  */
 @Slf4j
@@ -25,19 +30,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EmailService {
 
-    @Value("${app.email.brevo-api-key:not-set}")
-    private String brevoApiKey;
+    private final JavaMailSender     mailSender;
+    private final PdfService         pdfService;
+    private final EmailLogRepository emailLogRepo;
 
-    @Value("${app.email.sender-email:soumyaon7@gmail.com}")
+    @Value("${app.email.sender-email}")
     private String senderEmail;
 
     @Value("${app.email.sender-name:QuestionBank}")
     private String senderName;
-
-    private final PdfService        pdfService;
-    private final EmailLogRepository emailLogRepo;
-
-    private static final String BREVO_URL = "https://api.brevo.com/v3/smtp/email";
 
     public record SendResult(int emailsSent, List<String> errors) {}
 
@@ -47,52 +48,35 @@ public class EmailService {
             List<QuestionDTO> questions,
             Map<String, String> filters
     ) {
-        if ("not-set".equals(brevoApiKey)) {
-            log.warn("BREVO_API_KEY not configured — skipping email send");
-            return new SendResult(0, List.of("BREVO_API_KEY not configured"));
-        }
-
         int sent = 0;
         List<String> errors = new java.util.ArrayList<>();
         List<String> recipientEmails = new java.util.ArrayList<>();
 
-        RestClient client = RestClient.builder()
-                .baseUrl(BREVO_URL)
-                .defaultHeader("api-key", brevoApiKey)
-                .defaultHeader("Content-Type", "application/json")
-                .build();
-
         for (Map<String, String> recipient : recipients) {
-            String email    = recipient.get("email");
-            String name     = recipient.getOrDefault("name", "Candidate");
-            String company  = recipient.getOrDefault("company", "");
-            String round    = recipient.getOrDefault("round", "");
-            String date     = recipient.getOrDefault("date", "");
+            String email   = recipient.get("email");
+            String name    = recipient.getOrDefault("name", "Candidate");
+            String company = recipient.getOrDefault("company", "");
+            String round   = recipient.getOrDefault("round", "");
+            String date    = recipient.getOrDefault("date", "");
 
             try {
                 // Generate PDF for this recipient
                 byte[] pdfBytes = pdfService.generateQuestionListPdf(name, company, round, date, questions);
-                String pdfBase64 = Base64.getEncoder().encodeToString(pdfBytes);
 
                 String subject = String.format("Interview Prep — %s %s", company, round.toUpperCase());
 
-                // Build Brevo request body
-                Map<String, Object> body = Map.of(
-                        "sender", Map.of("name", senderName, "email", senderEmail),
-                        "to", List.of(Map.of("email", email, "name", name)),
-                        "subject", subject,
-                        "htmlContent", buildHtmlBody(name, company, round, date, questions.size()),
-                        "attachment", List.of(Map.of(
-                                "content", pdfBase64,
-                                "name", "interview-prep.pdf"
-                        ))
-                );
+                // Build and send MIME message with attachment
+                MimeMessage message = mailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-                client.post()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(body)
-                        .retrieve()
-                        .toBodilessEntity();
+                helper.setFrom(senderEmail, senderName);
+                helper.setTo(email);
+                helper.setSubject(subject);
+                helper.setText(buildHtmlBody(name, company, round, date, questions.size()), true);
+                helper.addAttachment("interview-prep.pdf",
+                        new ByteArrayDataSource(pdfBytes, "application/pdf"));
+
+                mailSender.send(message);
 
                 recipientEmails.add(email);
                 sent++;

@@ -13,6 +13,18 @@ spring:
       hibernate:
         format_sql: true
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${GMAIL_USERNAME}
+    password: ${GMAIL_APP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enabled: true
+
 # Supabase JWT secret + AI + Cache TTLs
 app:
   auth:
@@ -23,9 +35,7 @@ app:
     gemini-model: gemini-2.5-flash
 
   email:
-    brevo-api-key: ${BREVO_API_KEY:not-set}
-    brevo-smtp-key: ${BREVO_SMTP_KEY:not-set}
-    sender-email: soumyaon7@gmail.com
+    sender-email: ${GMAIL_USERNAME}
     sender-name: QuestionBank
 
   cache:

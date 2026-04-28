@@ -116,12 +116,11 @@
 			<!-- High-performance in-memory cache (W-TinyLFU) -->
 		</dependency>
 
-		<!-- PDF Generation -->
+		<!-- Email (Gmail SMTP) -->
 		<dependency>
-			<groupId>com.github.librepdf</groupId>
-			<artifactId>openpdf</artifactId>
-			<version>1.3.30</version>
-			<!-- OpenPDF (LGPL) — free for commercial use, generates PDF in memory -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+			<!-- JavaMailSender for sending emails via Gmail SMTP -->
 		</dependency>
 
 		<!-- PDF Generation -->
@@ -129,6 +128,7 @@
 			<groupId>com.github.librepdf</groupId>
 			<artifactId>openpdf</artifactId>
 			<version>1.3.30</version>
+			<!-- OpenPDF (LGPL) — free for commercial use, generates PDF in memory -->
 		</dependency>
 
 		<!-- Test -->
