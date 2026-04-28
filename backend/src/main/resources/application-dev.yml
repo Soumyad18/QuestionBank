@@ -1,0 +1,49 @@
+# --- Dev profile: credentials come from environment variables ---
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 5
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+# Supabase JWT secret + AI + Cache TTLs
+app:
+  auth:
+    supabase-url: ${SUPABASE_URL}
+
+  ai:
+    gemini-api-key: ${GEMINI_API_KEY:not-set}
+    gemini-model: gemini-2.5-flash
+
+  email:
+    brevo-api-key: ${BREVO_API_KEY:not-set}
+    brevo-smtp-key: ${BREVO_SMTP_KEY:not-set}
+    sender-email: soumyaon7@gmail.com
+    sender-name: QuestionBank
+
+  cache:
+    questions-ttl: 600      # 10 min
+    question-ttl: 1800      # 30 min
+    companies-ttl: 3600     # 60 min
+    tags-ttl: 3600          # 60 min
+    sessions-ttl: 1800      # 30 min
+
+logging:
+  level:
+    com.qb: DEBUG
+    org.hibernate.SQL: DEBUG
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
