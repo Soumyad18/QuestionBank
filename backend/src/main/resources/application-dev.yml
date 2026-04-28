@@ -20,10 +20,13 @@ spring:
     password: ${GMAIL_APP_PASSWORD}
     properties:
       mail:
+        transport:
+          protocol: smtp
         smtp:
           auth: true
           starttls:
             enabled: true
+            required: true
 
 # Supabase JWT secret + AI + Cache TTLs
 app:
@@ -31,8 +34,10 @@ app:
     supabase-url: ${SUPABASE_URL}
 
   ai:
+    provider: ${AI_PROVIDER:groq}              # "gemini" or "groq"
     gemini-api-key: ${GEMINI_API_KEY:not-set}
-    gemini-model: gemini-2.5-flash
+    gemini-model: ${AI_MODEL:llama-3.3-70b-versatile}
+    groq-api-key: ${GROQ_API_KEY:not-set}
 
   email:
     sender-email: ${GMAIL_USERNAME}

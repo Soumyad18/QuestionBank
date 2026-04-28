@@ -104,12 +104,34 @@ export function getSessions() {
 }
 
 // ── Digest ─────────────────────────────────────────────────
-export function digestParse(rawText: string) {
-  return post<DigestParseResponse>("/api/digest/parse", { rawText });
+export async function digestParse(rawText: string): Promise<DigestParseResponse> {
+  // Backend field names differ from frontend — map them here
+  const raw = await post<any>("/api/digest/parse", { rawText });
+  return {
+    sessions: (raw.sessions ?? []).map((s: any) => ({
+      candidateName: s.candidateName ?? "Unknown",
+      companyName: s.company ?? s.companyName ?? "Unknown",
+      round: s.round ?? "L1",
+      date: s.date ?? "",
+      interviewerName: s.interviewer ?? s.interviewerName ?? "",
+      questions: (s.questions ?? []).map((q: any) => ({
+        existingQuestionId: q.existingMatch?.id ?? null,
+        text: q.text ?? "",
+        category: q.category ?? "General",
+        tags: q.suggestedTags ?? q.tags ?? [],
+      })),
+    })),
+  };
 }
 
-export function digestCommit(body: DigestCommitRequest) {
-  return post<DigestCommitResponse>("/api/digest/commit", body);
+export async function digestCommit(body: DigestCommitRequest): Promise<DigestCommitResponse> {
+  const raw = await post<any>("/api/digest/commit", body);
+  return {
+    savedQuestions: raw.questionsCreated ?? raw.savedQuestions ?? 0,
+    linkedQuestions: raw.questionsLinked ?? raw.linkedQuestions ?? 0,
+    newSessions: raw.sessionsCreated ?? raw.newSessions ?? 0,
+    newTags: raw.tagsCreated ?? raw.newTags ?? 0,
+  };
 }
 
 // Digest types (mirrors backend DTOs)
@@ -141,6 +163,7 @@ export interface DigestCommitResponse {
   savedQuestions: number;
   linkedQuestions: number;
   newSessions: number;
+  newTags: number;
 }
 
 // ── User Profile + Dashboard ─────────────────────────────────

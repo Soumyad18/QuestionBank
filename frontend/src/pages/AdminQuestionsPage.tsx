@@ -94,18 +94,66 @@ export function AdminQuestionsPage() {
               </div>
             </div>
 
-            <div style={{ flexGrow: 1, display: "flex", flexDirection: "column", padding: "var(--spacing-md) 0" }}>
+            <div style={{ flexGrow: 1, display: "flex", flexDirection: "column", padding: "var(--spacing-md) 0", position: "relative" }}>
               <textarea
                 className="input-field"
                 placeholder="[ PASTE RAW TEXT HERE... ]"
                 value={rawText}
                 onChange={(e) => setRawText(e.target.value)}
                 disabled={loading}
-                style={{ flexGrow: 1, width: "100%", minHeight: "400px", resize: "none", fontFamily: "var(--font-mono)", fontSize: "14px", lineHeight: 1.8, border: "1px solid var(--border-color)", padding: "var(--spacing-md)", backgroundColor: "rgba(255,255,255,0.02)" }}
+                style={{ flexGrow: 1, width: "100%", minHeight: "400px", resize: "none", fontFamily: "var(--font-mono)", fontSize: "14px", lineHeight: 1.8, border: "1px solid var(--border-color)", padding: "var(--spacing-md)", backgroundColor: "rgba(255,255,255,0.02)", opacity: loading ? 0.3 : 1, transition: "opacity 0.3s" }}
               />
+
+              {/* ── Loading overlay ── */}
+              {loading && (
+                <div style={{
+                  position: "absolute", inset: 0, display: "flex", flexDirection: "column",
+                  alignItems: "center", justifyContent: "center", gap: "24px",
+                  backgroundColor: "rgba(10, 10, 10, 0.85)", backdropFilter: "blur(4px)", zIndex: 10,
+                  borderRadius: "4px",
+                }}>
+                  {/* Spinner */}
+                  <div style={{
+                    width: "48px", height: "48px", border: "3px solid rgba(255,255,255,0.1)",
+                    borderTop: "3px solid var(--accent-cyan, #00f0ff)", borderRadius: "50%",
+                    animation: "digest-spin 1s linear infinite",
+                  }} />
+                  <span style={{ color: "var(--accent-cyan, #00f0ff)", fontFamily: "var(--font-mono)", fontSize: "14px", letterSpacing: "2px", animation: "digest-pulse 2s ease-in-out infinite" }}>
+                    ANALYZING TEXT...
+                  </span>
+                  <span className="muted" style={{ fontSize: "12px", maxWidth: "340px", textAlign: "center", lineHeight: 1.6 }}>
+                    AI is extracting sessions, questions, categories, and tags from your text. This usually takes 3-10 seconds.
+                  </span>
+                  <style>{`
+                    @keyframes digest-spin { to { transform: rotate(360deg); } }
+                    @keyframes digest-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+                  `}</style>
+                </div>
+              )}
             </div>
 
-            {error && <p className="muted" style={{ color: "red" }}>{error}</p>}
+            {/* ── Error banner ── */}
+            {error && (
+              <div style={{
+                display: "flex", alignItems: "center", gap: "16px", padding: "16px 20px",
+                border: "1px solid rgba(248, 113, 113, 0.3)", borderRadius: "4px",
+                backgroundColor: "rgba(248, 113, 113, 0.08)", marginBottom: "var(--spacing-md)",
+              }}>
+                <span style={{ fontSize: "20px" }}>⚠</span>
+                <div style={{ flex: 1 }}>
+                  <span style={{ color: "#f87171", fontFamily: "var(--font-mono)", fontSize: "12px", letterSpacing: "1px" }}>PARSE_ERROR</span>
+                  <p style={{ color: "#fca5a5", fontSize: "14px", margin: "4px 0 0" }}>{error}</p>
+                </div>
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <button className="btn btn-primary" onClick={handleParse} style={{ fontSize: "12px", padding: "8px 16px" }}>
+                    [RETRY]
+                  </button>
+                  <button className="btn" onClick={() => setError("")} style={{ fontSize: "12px", padding: "8px 16px", color: "#888" }}>
+                    [DISMISS]
+                  </button>
+                </div>
+              </div>
+            )}
 
             <div className="row" style={{ justifyContent: "flex-end", paddingTop: "var(--spacing-md)" }}>
               <button className="btn btn-primary" onClick={handleParse} disabled={loading || !rawText.trim()}
@@ -176,7 +224,7 @@ export function AdminQuestionsPage() {
             <div className="row" style={{ justifyContent: "flex-end", paddingTop: "var(--spacing-md)" }}>
               <button className="btn btn-primary" onClick={handleCommit} disabled={loading}
                 style={{ fontSize: "16px", padding: "16px 48px", opacity: loading ? 0.5 : 1 }}>
-                {loading ? "[ COMMITTING... ]" : "[ COMMIT TO DB ]"}
+                {loading ? "[ SAVING... ]" : "[ SAVE & INGEST ]"}
               </button>
             </div>
           </>
